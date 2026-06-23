@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "python-recipe-starter"
+version = "0.1.0"
+description = "Example OpenRewrite Python recipes and tests to help you get started"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+keywords = ["openrewrite", "moderne", "recipe", "refactoring", "python", "codemods", "lst"]
+dependencies = ["openrewrite>=8.85,<9"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0.0"]
+
+[project.urls]
+Homepage = "https://docs.moderne.io/"
+Repository = "https://github.com/moderneinc/python-recipe-starter"
+
+# The Moderne CLI discovers the recipes in this package through this entry point.
+[project.entry-points."openrewrite.recipes"]
+python-recipe-starter = "python_recipe_starter:activate"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
