@@ -10,10 +10,17 @@ readme = "README.md"
 requires-python = ">=3.12"
 license = { text = "Apache-2.0" }
 keywords = ["openrewrite", "moderne", "recipe", "refactoring", "python", "codemods", "lst"]
-dependencies = ["openrewrite>=8.93,<9"]
+# The host that runs the recipes provides openrewrite, so it is not a runtime dependency.
+# The dev extra installs it for writing and testing recipes.
+dependencies = []
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0.0"]
+dev = [
+    "openrewrite>=8.93,<9",
+    "pytest>=8.0.0",
+    "ruff>=0.17",
+    "ty>=0.0.90",
+]
 
 [project.urls]
 Homepage = "https://docs.moderne.io/"
@@ -28,3 +35,10 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
