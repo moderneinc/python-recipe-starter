@@ -36,14 +36,18 @@ def test_removes_every_pass_when_block_has_other_statements():
     )
 
 
-def test_keeps_passes_when_block_has_only_passes():
+def test_keeps_one_pass_when_block_has_only_passes():
     RecipeSpec(recipe=RemoveRedundantPass()).rewrite_run(
         python(
             """
             def foo():
                 pass
                 pass
+            """,
             """
+            def foo():
+                pass
+            """,
         )
     )
 
