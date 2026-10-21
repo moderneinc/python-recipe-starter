@@ -6,8 +6,6 @@ This example shows two more techniques:
 * using the visitor's ``cursor`` to inspect a node's surroundings.
 """
 
-from typing import Optional
-
 from rewrite import ExecutionContext, Recipe, TreeVisitor
 from rewrite.java import J
 from rewrite.java.tree import Block
@@ -32,13 +30,17 @@ class RemoveRedundantPass(Recipe):
 
     def editor(self) -> TreeVisitor[J, ExecutionContext]:
         class Visitor(PythonVisitor[ExecutionContext]):
-            def visit_pass(self, pass_: Pass, p: ExecutionContext) -> Optional[J]:
-                # Look up the block this `pass` lives in. If it has other
-                # statements, the `pass` is redundant and can be removed.
-                # Returning None deletes the node.
+            def visit_pass(self, pass_: Pass, p: ExecutionContext) -> J | None:
+                # Look up the block this `pass` lives in. A `pass` is redundant
+                # when the block has other statements, or when it is not the
+                # first of several `pass` statements; the first one is kept so
+                # the block never ends up empty. Returning None deletes the node.
                 block = self.cursor.first_enclosing(Block)
-                if block is not None and len(block.statements) > 1:
-                    return None
-                return pass_
+                if block is None:
+                    return pass_
+                only_passes = all(isinstance(s, Pass) for s in block.statements)
+                if only_passes and block.statements[0].id == pass_.id:
+                    return pass_
+                return None
 
         return Visitor()
