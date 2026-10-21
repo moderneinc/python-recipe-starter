@@ -32,6 +32,7 @@ This repository includes example recipes that demonstrate different authoring te
 
 * **[RemoveZeroFromRange](./src/python_recipe_starter/remove_zero_from_range.py)** — shortens `range(0, n)` to `range(n)`. Demonstrates a `pattern` that matches code by its structure and types, a `capture` with a `constraint`, a `template` built from what the pattern captured, and a precondition that skips files never calling `range`.
 * **[ReplaceLocaleResetlocale](./src/python_recipe_starter/replace_locale_resetlocale.py)** — replaces `locale.resetlocale()`, removed in Python 3.13, with `locale.setlocale(locale.LC_ALL, "")`. Demonstrates a `MethodMatcher` that matches calls by their type rather than their name, a `template` whose `context` declares the imports its code needs, which the template binds in the file the way `maybe_bind` does, and `maybe_remove_import` for the import the rewrite leaves unused.
+* **[FindShellSubprocessCalls](./src/python_recipe_starter/find_shell_subprocess_calls.py)** — finds `subprocess` calls that pass `shell=True` and lists each one, with the command it runs, in a data table. Demonstrates a search recipe that marks what it finds with `SearchResult.found`, a `DataTable` whose rows are a `@dataclass` with `column(...)` metadata on each field, the `data_tables` property that declares the table, and `insert_row` from the visitor. Its tests read the rows back from the execution context's `DATA_TABLE_STORE`.
 
 Before writing a recipe, check whether the SDK already ships it. [`rewrite.python.recipes`](https://github.com/openrewrite/rewrite/tree/main/rewrite-python/rewrite/src/rewrite/python/recipes) includes `ChangeMethodName`, `ChangeImport`, `RemovePass` and others, and their sources are worth reading next. [`ChangeMethodName`](https://github.com/openrewrite/rewrite/blob/main/rewrite-python/rewrite/src/rewrite/python/recipes/change_method_name.py) is configured through `option()` fields, [`RemovePass`](https://github.com/openrewrite/rewrite/blob/main/rewrite-python/rewrite/src/rewrite/python/recipes/remove_pass.py) deletes statements from a block, and [`ChangeImport`](https://github.com/openrewrite/rewrite/blob/main/rewrite-python/rewrite/src/rewrite/python/recipes/change_import.py) moves an import with `maybe_rebind`, renaming the references that read it.
 
@@ -42,9 +43,11 @@ python-recipe-starter/
 ├── src/
 │   └── python_recipe_starter/
 │       ├── __init__.py                # activate(): registers the recipes
+│       ├── find_shell_subprocess_calls.py
 │       ├── remove_zero_from_range.py
 │       └── replace_locale_resetlocale.py
 ├── tests/
+│   ├── test_find_shell_subprocess_calls.py
 │   ├── test_remove_zero_from_range.py
 │   └── test_replace_locale_resetlocale.py
 ├── pyproject.toml                     # package metadata + openrewrite.recipes entry point
@@ -69,6 +72,8 @@ Then build the Python LSTs for your target repository and run a recipe by its na
 mod build /path/to/your/repo
 mod run /path/to/your/repo --recipe=com.yourorg.ReplaceLocaleResetlocale
 ```
+
+A recipe that declares data tables, like `FindShellSubprocessCalls`, has the CLI save their rows with the run, alongside the diff of what it changed or marked.
 
 ## License
 
