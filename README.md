@@ -4,7 +4,7 @@ A starter repository for learning how to create [OpenRewrite](https://github.com
 
 ## Getting started
 
-New to OpenRewrite Python recipe development? Start with the [guide to writing a Python refactoring recipe](https://docs.moderne.io/user-documentation/recipes/recipe-authoring/writing-python-recipes), and the [OpenRewrite documentation](https://docs.openrewrite.org/). The Python LST and parser live in the [`rewrite-python` module](https://github.com/openrewrite/rewrite/tree/main/rewrite-python).
+New to OpenRewrite Python recipe development? Start with the [guide to writing a Python refactoring recipe](https://docs.moderne.io/user-documentation/recipes/authoring-recipes/writing-recipes/writing-python-recipes), and the [OpenRewrite documentation](https://docs.openrewrite.org/). The Python LST and parser live in the [`rewrite-python` module](https://github.com/openrewrite/rewrite/tree/main/rewrite-python).
 
 ## Quick start
 
@@ -47,7 +47,7 @@ python-recipe-starter/
 └── .github/workflows/ci.yml
 ```
 
-The `activate()` function in `__init__.py` installs each recipe into the marketplace, and the `openrewrite.recipes` entry point in `pyproject.toml` is how the Moderne CLI discovers it.
+The `activate()` function in `__init__.py` installs each recipe into the marketplace under a category path (`RemoveRedundantPass` lands under **Python > Cleanup**), and the `openrewrite.recipes` entry point in `pyproject.toml` is how the Moderne CLI discovers it.
 
 ## Running your recipes
 

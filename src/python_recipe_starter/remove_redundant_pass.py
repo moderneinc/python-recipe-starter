@@ -33,11 +33,13 @@ class RemoveRedundantPass(Recipe):
     def editor(self) -> TreeVisitor[J, ExecutionContext]:
         class Visitor(PythonVisitor[ExecutionContext]):
             def visit_pass(self, pass_: Pass, p: ExecutionContext) -> Optional[J]:
-                # Look up the block this `pass` lives in. If it has other
-                # statements, the `pass` is redundant and can be removed.
+                # Look up the block this `pass` lives in. If it has statements
+                # other than `pass`, the `pass` is redundant and can be removed.
+                # Every `pass` sees the same unmodified block, so counting other
+                # `pass` statements would delete them all and leave it empty.
                 # Returning None deletes the node.
                 block = self.cursor.first_enclosing(Block)
-                if block is not None and len(block.statements) > 1:
+                if block is not None and any(not isinstance(s, Pass) for s in block.statements):
                     return None
                 return pass_
 
