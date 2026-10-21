@@ -18,18 +18,22 @@ source .venv/bin/activate
 pip install -e ".[dev]"
 ```
 
-Run the tests:
+Run the tests, the linter and the type checker:
 
 ```bash
 pytest
+ruff check
+ty check
 ```
 
 ## Example recipes
 
 This repository includes example recipes that demonstrate different authoring techniques:
 
-* **[RenameFunctionCall](./src/python_recipe_starter/rename_function_call.py)** — renames calls to a function from one name to another (for example, `assertEquals` to `assertEqual`). Demonstrates a configurable recipe with `option()` fields and a visitor that returns a modified copy of a node.
-* **[RemoveRedundantPass](./src/python_recipe_starter/remove_redundant_pass.py)** — removes `pass` statements that share a block with other statements. Demonstrates deleting a node by returning `None`, and using the visitor's `cursor` to inspect a node's surroundings.
+* **[RemoveZeroFromRange](./src/python_recipe_starter/remove_zero_from_range.py)** — shortens `range(0, n)` to `range(n)`. Demonstrates a `pattern` that matches code by its structure and types, a `capture` with a `constraint`, a `template` built from what the pattern captured, and a precondition that skips files never calling `range`.
+* **[ReplaceLocaleResetlocale](./src/python_recipe_starter/replace_locale_resetlocale.py)** — replaces `locale.resetlocale()`, removed in Python 3.13, with `locale.setlocale(locale.LC_ALL, "")`. Demonstrates a `MethodMatcher` that matches calls by their type rather than their name, a `template` whose `context` declares the imports its code needs, which the template binds in the file the way `maybe_bind` does, and `maybe_remove_import` for the import the rewrite leaves unused.
+
+Before writing a recipe, check whether the SDK already ships it. [`rewrite.python.recipes`](https://github.com/openrewrite/rewrite/tree/main/rewrite-python/rewrite/src/rewrite/python/recipes) includes `ChangeMethodName`, `ChangeImport`, `RemovePass` and others, and their sources are worth reading next. [`ChangeMethodName`](https://github.com/openrewrite/rewrite/blob/main/rewrite-python/rewrite/src/rewrite/python/recipes/change_method_name.py) is configured through `option()` fields, [`RemovePass`](https://github.com/openrewrite/rewrite/blob/main/rewrite-python/rewrite/src/rewrite/python/recipes/remove_pass.py) deletes statements from a block, and [`ChangeImport`](https://github.com/openrewrite/rewrite/blob/main/rewrite-python/rewrite/src/rewrite/python/recipes/change_import.py) moves an import with `maybe_rebind`, renaming the references that read it.
 
 ## Project structure
 
@@ -38,16 +42,16 @@ python-recipe-starter/
 ├── src/
 │   └── python_recipe_starter/
 │       ├── __init__.py                # activate(): registers the recipes
-│       ├── rename_function_call.py
-│       └── remove_redundant_pass.py
+│       ├── remove_zero_from_range.py
+│       └── replace_locale_resetlocale.py
 ├── tests/
-│   ├── test_rename_function_call.py
-│   └── test_remove_redundant_pass.py
+│   ├── test_remove_zero_from_range.py
+│   └── test_replace_locale_resetlocale.py
 ├── pyproject.toml                     # package metadata + openrewrite.recipes entry point
 └── .github/workflows/ci.yml
 ```
 
-The `activate()` function in `__init__.py` installs each recipe into the marketplace under a category path (`RemoveRedundantPass` lands under **Python > Cleanup**), and the `openrewrite.recipes` entry point in `pyproject.toml` is how the Moderne CLI discovers it.
+Each recipe declares its marketplace category with `@categorize` (`ReplaceLocaleResetlocale` lands under **Python > Migrate**). The `activate()` function in `__init__.py` installs each recipe under that category, and the `openrewrite.recipes` entry point in `pyproject.toml` is how the Moderne CLI discovers it.
 
 ## Running your recipes
 
@@ -59,11 +63,11 @@ Install this package into the CLI's recipe marketplace, straight from the projec
 mod config recipes pip install .
 ```
 
-Then build the Python LSTs for your target repository and run a recipe by its name, passing any options as `-P` parameters:
+Then build the Python LSTs for your target repository and run a recipe by its name. A recipe with options takes each one as a `-P<option>=<value>` parameter.
 
 ```bash
 mod build /path/to/your/repo
-mod run /path/to/your/repo --recipe=com.yourorg.RenameFunctionCall -Pold_name=assertEquals -Pnew_name=assertEqual
+mod run /path/to/your/repo --recipe=com.yourorg.ReplaceLocaleResetlocale
 ```
 
 ## License
