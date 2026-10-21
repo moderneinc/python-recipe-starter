@@ -8,7 +8,7 @@ New to OpenRewrite Python recipe development? Start with the [guide to writing a
 
 ## Quick start
 
-Clone this repository, create a virtual environment, and install the project with its development dependencies:
+You need Python 3.12 or newer. Clone this repository, create a virtual environment, and install the project with its development dependencies:
 
 ```bash
 git clone git@github.com:moderneinc/python-recipe-starter.git

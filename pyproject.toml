@@ -7,10 +7,10 @@ name = "python-recipe-starter"
 version = "0.1.0"
 description = "Example OpenRewrite Python recipes and tests to help you get started"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 license = { text = "Apache-2.0" }
 keywords = ["openrewrite", "moderne", "recipe", "refactoring", "python", "codemods", "lst"]
-dependencies = ["openrewrite>=8.85,<9"]
+dependencies = ["openrewrite>=8.93,<9"]
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0.0"]
